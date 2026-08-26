@@ -114,26 +114,29 @@
     );
   }
 
-  document.addEventListener("keydown", (event) => {
+  function getSpeedShortcutDirection(event) {
+    if (event.key === "+" || event.code === "NumpadAdd") return 1;
+    if (event.key === "-" || event.code === "NumpadSubtract") return -1;
+    return 0;
+  }
+
+  function handleSpeedShortcut(event) {
     if (event.ctrlKey || event.metaKey || isTypingTarget(event.target)) return;
 
-    let action;
+    const direction = getSpeedShortcutDirection(event);
+    if (!direction) return;
 
-    if (event.key === "+" || event.code === "NumpadAdd") {
-      action = () => applySpeed(speed + KEYBOARD_STEP);
-    } else if (event.key === "-" || event.code === "NumpadSubtract") {
-      action = () => applySpeed(speed - KEYBOARD_STEP);
-    } else if (!event.altKey && !event.shiftKey && event.code === "ArrowLeft") {
-      action = () => seek(-10);
-    } else if (!event.altKey && !event.shiftKey && event.code === "ArrowRight") {
-      action = () => seek(10);
-    }
-
-    if (!action) return;
     event.preventDefault();
-    event.stopPropagation();
-    action();
-  }, true);
+    event.stopImmediatePropagation();
+
+    if (event.type === "keydown" && !event.repeat) {
+      applySpeed(speed + direction * KEYBOARD_STEP);
+    }
+  }
+
+  window.addEventListener("keydown", handleSpeedShortcut, true);
+  window.addEventListener("keypress", handleSpeedShortcut, true);
+  window.addEventListener("keyup", handleSpeedShortcut, true);
 
   const observer = new MutationObserver((mutations) => {
     if (mutations.some((mutation) => [...mutation.addedNodes].some((node) =>

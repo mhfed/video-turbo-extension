@@ -129,7 +129,7 @@ button {
 .setting input:checked + i { background: #7355f0; }
 .setting input:checked + i::after { transform: translateX(15px); }
 
-footer { display: flex; justify-content: space-between; color: #666b75; font-size: 9px; }
+footer { display: flex; justify-content: center; color: #666b75; font-size: 9px; }
 kbd { padding: 1px 4px; border: 1px solid #34363e; border-bottom-width: 2px; border-radius: 4px; background: #1b1d22; color: #9ca1ac; font-family: inherit; }
 
 body.unavailable .speed-card,

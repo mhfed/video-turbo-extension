@@ -28,8 +28,6 @@ Với Microsoft Edge, mở `edge://extensions` và làm tương tự.
 | --- | --- |
 | `+` | Tăng 0.1× |
 | `-` | Giảm 0.1× |
-| `←` | Lùi 10 giây |
-| `→` | Tới 10 giây |
 
 ## Lưu ý
 
