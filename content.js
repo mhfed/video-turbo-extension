@@ -3,10 +3,10 @@
 
   const MIN_SPEED = 0.25;
   const MAX_SPEED = 16;
-  const KEYBOARD_STEP = 0.1;
   const hostname = location.hostname || "local-file";
 
   let speed = 1;
+  let keyboardStep = 0.1;
   let rememberSite = true;
   let hudTimer;
 
@@ -101,11 +101,50 @@
 
   function togglePlayback() {
     const video = getPrimaryVideo();
-    if (!video) return false;
-    if (video.paused) video.play().catch(() => {});
+    if (!video) return null;
+    const willPlay = video.paused;
+    if (willPlay) video.play().catch(() => {});
     else video.pause();
-    showHud(video.paused ? "Tạm dừng" : "Đang phát");
+    showHud(willPlay ? "Đang phát" : "Tạm dừng");
+    return { paused: !willPlay };
+  }
+
+  function restartVideo() {
+    const video = getPrimaryVideo();
+    if (!video) return false;
+    video.currentTime = 0;
+    showHud("Phát lại từ đầu");
     return true;
+  }
+
+  function toggleMute() {
+    const video = getPrimaryVideo();
+    if (!video) return null;
+    video.muted = !video.muted;
+    showHud(video.muted ? "Đã tắt tiếng" : "Đã bật tiếng");
+    return video.muted;
+  }
+
+  function toggleLoop() {
+    const video = getPrimaryVideo();
+    if (!video) return null;
+    video.loop = !video.loop;
+    showHud(video.loop ? "Đã bật lặp lại" : "Đã tắt lặp lại");
+    return video.loop;
+  }
+
+  function getState() {
+    const video = getPrimaryVideo();
+    return {
+      speed,
+      videoCount: videos().length,
+      paused: video?.paused ?? true,
+      muted: video?.muted ?? false,
+      loop: video?.loop ?? false,
+      currentTime: Number.isFinite(video?.currentTime) ? video.currentTime : 0,
+      duration: Number.isFinite(video?.duration) ? video.duration : 0,
+      hostname
+    };
   }
 
   function isTypingTarget(target) {
@@ -141,7 +180,7 @@
     event.stopImmediatePropagation();
 
     if (event.type === "keydown") {
-      applySpeed(speed + direction * KEYBOARD_STEP);
+      applySpeed(speed + direction * keyboardStep);
     }
   }
 
@@ -173,8 +212,7 @@
     if (!message?.type?.startsWith("VIDEO_TURBO_")) return;
 
     if (message.type === "VIDEO_TURBO_GET_STATE") {
-      const video = getPrimaryVideo();
-      sendResponse({ speed, videoCount: videos().length, paused: video?.paused ?? true, hostname });
+      sendResponse(getState());
     }
 
     if (message.type === "VIDEO_TURBO_SET_SPEED") {
@@ -186,16 +224,35 @@
     }
 
     if (message.type === "VIDEO_TURBO_TOGGLE") {
-      sendResponse({ success: togglePlayback() });
+      const result = togglePlayback();
+      sendResponse({ success: result !== null, ...getState(), ...(result || {}) });
+    }
+
+    if (message.type === "VIDEO_TURBO_RESTART") {
+      const success = restartVideo();
+      sendResponse({ success, ...getState() });
+    }
+
+    if (message.type === "VIDEO_TURBO_TOGGLE_MUTE") {
+      const muted = toggleMute();
+      sendResponse({ success: muted !== null, muted });
+    }
+
+    if (message.type === "VIDEO_TURBO_TOGGLE_LOOP") {
+      const loop = toggleLoop();
+      sendResponse({ success: loop !== null, loop });
     }
   });
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && changes.rememberSite) rememberSite = changes.rememberSite.newValue;
+    if (area !== "local") return;
+    if (changes.rememberSite) rememberSite = changes.rememberSite.newValue;
+    if (changes.keyboardStep) keyboardStep = Number(changes.keyboardStep.newValue) || 0.1;
   });
 
-  chrome.storage.local.get(["rememberSite", `speed:${hostname}`, "lastSpeed"], (stored) => {
+  chrome.storage.local.get(["rememberSite", "keyboardStep", `speed:${hostname}`, "lastSpeed"], (stored) => {
     rememberSite = stored.rememberSite !== false;
+    keyboardStep = Number(stored.keyboardStep) || 0.1;
     const initialSpeed = rememberSite ? stored[`speed:${hostname}`] : stored.lastSpeed;
     applySpeed(initialSpeed || 1, { persist: false, notify: false });
   });

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Video Turbo",
-  "version": "1.0.4",
-  "description": "Tăng tốc và tua nhanh video trên YouTube cùng hầu hết website.",
+  "version": "1.1.0",
+  "description": "Điều khiển tốc độ và trình phát video trên YouTube cùng hầu hết website.",
   "permissions": ["activeTab", "storage"],
   "host_permissions": ["<all_urls>"],
   "action": {

@@ -8,48 +8,121 @@
   </head>
   <body>
     <main>
-      <header>
-        <div class="brand-mark" aria-hidden="true">▶▶</div>
-        <div>
+      <header class="app-header">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 5v14l9-7-9-7Zm10 0v14h3V5h-3Z"/></svg>
+        </div>
+        <div class="brand-copy">
           <h1>Video Turbo</h1>
           <p id="site-label">Đang tìm video…</p>
         </div>
+        <span id="status-dot" class="status-dot" title="Trạng thái video"></span>
       </header>
 
-      <section class="speed-card" aria-labelledby="speed-title">
-        <div class="speed-heading">
-          <span id="speed-title">Tốc độ phát</span>
-          <output id="speed-output" for="speed-slider">1×</output>
-        </div>
-        <input id="speed-slider" type="range" min="0.25" max="16" step="0.25" value="1" aria-label="Tốc độ phát video">
-        <div class="range-labels"><span>0.25×</span><span>16×</span></div>
-        <div class="presets" aria-label="Tốc độ nhanh">
-          <button data-speed="0.5">0.5×</button>
-          <button data-speed="1">1×</button>
-          <button data-speed="1.5">1.5×</button>
-          <button data-speed="2">2×</button>
-          <button data-speed="3">3×</button>
-          <button data-speed="4">4×</button>
-          <button data-speed="8">8×</button>
-          <button data-speed="16">16×</button>
-        </div>
+      <nav class="tabs" aria-label="Khu vực">
+        <button class="tab active" data-tab="controls" aria-selected="true">Điều khiển</button>
+        <button class="tab" data-tab="settings" aria-selected="false">Cài đặt</button>
+      </nav>
+
+      <section id="controls-panel" class="panel active" aria-label="Điều khiển">
+        <section class="speed-card" aria-labelledby="speed-title">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow" id="speed-title">Tốc độ phát</span>
+              <span class="keyboard-hint"><kbd>−</kbd><kbd>=</kbd></span>
+            </div>
+            <button id="reset-button" class="text-button" title="Đặt lại tốc độ">Đặt lại 1×</button>
+          </div>
+
+          <div class="speed-control">
+            <button id="decrease-button" class="round-button" aria-label="Giảm tốc độ">−</button>
+            <output id="speed-output" for="speed-slider">1×</output>
+            <button id="increase-button" class="round-button" aria-label="Tăng tốc độ">+</button>
+          </div>
+
+          <input id="speed-slider" type="range" min="0.25" max="16" step="0.05" value="1" aria-label="Tốc độ phát video">
+          <div class="range-labels"><span>0.25×</span><span>16×</span></div>
+
+          <div class="presets" aria-label="Tốc độ nhanh">
+            <button data-speed="0.5">0.5×</button>
+            <button data-speed="1">1×</button>
+            <button data-speed="1.25">1.25×</button>
+            <button data-speed="1.5">1.5×</button>
+            <button data-speed="2">2×</button>
+            <button data-speed="3">3×</button>
+            <button data-speed="4">4×</button>
+            <button data-speed="8">8×</button>
+          </div>
+        </section>
+
+        <section class="media-card" aria-label="Trình phát">
+          <div class="media-meta">
+            <span id="time-label">00:00 / 00:00</span>
+            <span id="video-count">0 video</span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><i id="media-progress"></i></div>
+
+          <div class="transport">
+            <button id="restart-button" class="icon-button" title="Phát lại từ đầu" aria-label="Phát lại từ đầu">
+              <svg viewBox="0 0 24 24"><path d="M12 5a7 7 0 1 1-6.3 4H8V7H2v6h2V9.9A9 9 0 1 0 12 3v2Z"/></svg>
+            </button>
+            <button id="back-button" class="seek-button" title="Tua lùi"><span>↶</span><small id="back-label">10</small></button>
+            <button id="play-button" class="play-button" title="Phát hoặc tạm dừng" aria-label="Phát hoặc tạm dừng">
+              <svg class="play-icon" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></svg>
+              <svg class="pause-icon" viewBox="0 0 24 24"><path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z"/></svg>
+            </button>
+            <button id="forward-button" class="seek-button" title="Tua tới"><span>↷</span><small id="forward-label">10</small></button>
+            <button id="mute-button" class="icon-button" title="Bật hoặc tắt tiếng" aria-label="Bật hoặc tắt tiếng" aria-pressed="false">
+              <svg class="sound-icon" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Zm12.5 3a4.5 4.5 0 0 0-2-3.74v7.48a4.5 4.5 0 0 0 2-3.74Zm-2-7.97v2.06a7 7 0 0 1 0 11.82v2.06a9 9 0 0 0 0-15.94Z"/></svg>
+              <svg class="muted-icon" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Zm11.6.6L17 11l1.4-1.4 1.4 1.4-1.4 1.4 1.4 1.4-1.4 1.4-1.4-1.4-1.4 1.4-1.4-1.4 1.4-1.4-1.4-1.4 1.4-1.4Z"/></svg>
+            </button>
+          </div>
+
+          <button id="loop-button" class="feature-button" aria-pressed="false">
+            <span class="feature-icon">∞</span>
+            <span><strong>Lặp lại video</strong><small>Phát lại tự động khi kết thúc</small></span>
+            <i class="check-mark">✓</i>
+          </button>
+        </section>
       </section>
 
-      <section class="transport" aria-label="Điều khiển video">
-        <button id="back-button" class="transport-button" title="Tua lùi 10 giây"><span>↶</span><small>10s</small></button>
-        <button id="play-button" class="play-button" title="Phát hoặc tạm dừng">▶</button>
-        <button id="forward-button" class="transport-button" title="Tua tới 10 giây"><span>↷</span><small>10s</small></button>
+      <section id="settings-panel" class="panel" aria-label="Cài đặt">
+        <section class="settings-card">
+          <div class="setting-block">
+            <div class="setting-title"><strong>Bước thay đổi tốc độ</strong><small>Dùng cho phím − và =</small></div>
+            <div class="segmented" id="step-options">
+              <button data-step="0.05">0.05×</button>
+              <button data-step="0.1">0.1×</button>
+              <button data-step="0.25">0.25×</button>
+              <button data-step="0.5">0.5×</button>
+            </div>
+          </div>
+
+          <div class="setting-block">
+            <div class="setting-title"><strong>Khoảng tua</strong><small>Dùng cho nút tua trong popup</small></div>
+            <div class="segmented three" id="seek-options">
+              <button data-seek="5">5 giây</button>
+              <button data-seek="10">10 giây</button>
+              <button data-seek="30">30 giây</button>
+            </div>
+          </div>
+
+          <label class="toggle-setting">
+            <span><strong>Nhớ theo website</strong><small>Tự áp dụng tốc độ khi quay lại</small></span>
+            <input id="remember-site" type="checkbox" checked>
+            <i aria-hidden="true"></i>
+          </label>
+        </section>
+
+        <section class="shortcut-card">
+          <span class="eyebrow">Phím tắt</span>
+          <div><span>Tăng tốc độ</span><kbd>=</kbd></div>
+          <div><span>Giảm tốc độ</span><kbd>−</kbd></div>
+          <p>Không kích hoạt khi bạn đang nhập văn bản.</p>
+        </section>
       </section>
 
-      <label class="setting">
-        <span><strong>Nhớ theo website</strong><small>Tự áp dụng lần sau</small></span>
-        <input id="remember-site" type="checkbox" checked>
-        <i aria-hidden="true"></i>
-      </label>
-
-      <footer>
-        <span><kbd>−</kbd>/<kbd>=</kbd> tốc độ 0.1×</span>
-      </footer>
+      <footer><span>Video Turbo <b>v1.1</b></span><span>Không theo dõi dữ liệu</span></footer>
     </main>
     <script src="popup.js"></script>
   </body>
