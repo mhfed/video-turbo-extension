@@ -123,14 +123,10 @@
       action = () => applySpeed(speed + KEYBOARD_STEP);
     } else if (event.key === "-" || event.code === "NumpadSubtract") {
       action = () => applySpeed(speed - KEYBOARD_STEP);
-    } else if (event.altKey && !event.shiftKey) {
-      const altActions = {
-        Digit0: () => applySpeed(1),
-        KeyJ: () => seek(-10),
-        KeyK: () => togglePlayback(),
-        KeyL: () => seek(10)
-      };
-      action = altActions[event.code];
+    } else if (!event.altKey && !event.shiftKey && event.code === "ArrowLeft") {
+      action = () => seek(-10);
+    } else if (!event.altKey && !event.shiftKey && event.code === "ArrowRight") {
+      action = () => seek(10);
     }
 
     if (!action) return;
