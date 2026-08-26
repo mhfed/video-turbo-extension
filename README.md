@@ -26,7 +26,7 @@ Với Microsoft Edge, mở `edge://extensions` và làm tương tự.
 
 | Phím | Chức năng |
 | --- | --- |
-| `+` | Tăng 0.1× |
+| `=` hoặc `+` | Tăng 0.1× |
 | `-` | Giảm 0.1× |
 
 ## Lưu ý

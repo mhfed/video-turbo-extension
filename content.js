@@ -115,8 +115,19 @@
   }
 
   function getSpeedShortcutDirection(event) {
-    if (event.key === "+" || event.code === "NumpadAdd") return 1;
-    if (event.key === "-" || event.code === "NumpadSubtract") return -1;
+    if (
+      event.code === "Equal" ||
+      event.code === "NumpadAdd" ||
+      event.key === "=" ||
+      event.key === "+"
+    ) return 1;
+
+    if (
+      event.code === "Minus" ||
+      event.code === "NumpadSubtract" ||
+      event.key === "-"
+    ) return -1;
+
     return 0;
   }
 
@@ -129,7 +140,7 @@
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    if (event.type === "keydown" && !event.repeat) {
+    if (event.type === "keydown") {
       applySpeed(speed + direction * KEYBOARD_STEP);
     }
   }
