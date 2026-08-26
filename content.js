@@ -3,7 +3,7 @@
 
   const MIN_SPEED = 0.25;
   const MAX_SPEED = 16;
-  const STEP = 0.25;
+  const KEYBOARD_STEP = 0.1;
   const hostname = location.hostname || "local-file";
 
   let speed = 1;
@@ -115,18 +115,24 @@
   }
 
   document.addEventListener("keydown", (event) => {
-    if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || isTypingTarget(event.target)) return;
+    if (event.ctrlKey || event.metaKey || isTypingTarget(event.target)) return;
 
-    const actions = {
-      ArrowRight: () => applySpeed(speed + STEP),
-      ArrowLeft: () => applySpeed(speed - STEP),
-      Digit0: () => applySpeed(1),
-      KeyJ: () => seek(-10),
-      KeyK: () => togglePlayback(),
-      KeyL: () => seek(10)
-    };
+    let action;
 
-    const action = actions[event.code];
+    if (event.key === "+" || event.code === "NumpadAdd") {
+      action = () => applySpeed(speed + KEYBOARD_STEP);
+    } else if (event.key === "-" || event.code === "NumpadSubtract") {
+      action = () => applySpeed(speed - KEYBOARD_STEP);
+    } else if (event.altKey && !event.shiftKey) {
+      const altActions = {
+        Digit0: () => applySpeed(1),
+        KeyJ: () => seek(-10),
+        KeyK: () => togglePlayback(),
+        KeyL: () => seek(10)
+      };
+      action = altActions[event.code];
+    }
+
     if (!action) return;
     event.preventDefault();
     event.stopPropagation();

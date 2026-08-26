@@ -26,8 +26,8 @@ Với Microsoft Edge, mở `edge://extensions` và làm tương tự.
 
 | Phím | Chức năng |
 | --- | --- |
-| `Alt + →` | Tăng 0.25× |
-| `Alt + ←` | Giảm 0.25× |
+| `+` | Tăng 0.1× |
+| `-` | Giảm 0.1× |
 | `Alt + 0` | Về 1× |
 | `Alt + J` | Lùi 10 giây |
 | `Alt + K` | Phát / tạm dừng |
